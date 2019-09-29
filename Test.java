@@ -1,12 +1,27 @@
+import java.util.concurrent.*;
+
 public class Test {
-    public static void main(String[] args) {
+    public static void main(String[] args)  throws InterruptedException {
+		boolean stop = false;
 		System.out.println("Main thread has started");
+		
 		WorkHard wh = new WorkHard();
 		PlayHard ph = new PlayHard();
 		Thread pt = new Thread(ph);
 		pt.start();
 		
-		while (wh.stop && ph.stop);
+		ExecutorService service = null;
+		try {
+			service = Executors.newSingleThreadExecutor();
+			service.execute(() -> {for (int i = 0; i < 3; i++) 
+				System.out.println("What's going on?");}
+			);
+		} finally {
+			if (service != null) service.shutdown();
+			stop = true;
+		}
+		
+		while (wh.stop && ph.stop && stop) Thread.sleep(500);
 	} 
 }
 
