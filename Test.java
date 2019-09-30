@@ -2,7 +2,6 @@ import java.util.concurrent.*;
 
 public class Test {
     public static void main(String[] args)  throws InterruptedException {
-		boolean stop = false;
 		System.out.println("Main thread has started");
 		
 		WorkHard wh = new WorkHard();
@@ -18,17 +17,15 @@ public class Test {
 			);
 		} finally {
 			if (service != null) service.shutdown();
-			stop = true;
 		}
 		
-		while (wh.stop && ph.stop && stop) Thread.sleep(500);
+		while (wh.isAlive() || pt.isAlive() || !service.isTerminated()) Thread.sleep(500);
 	} 
 }
 
 class WorkHard extends Thread {
 	int counter;
-	boolean stop;
-	
+
 	WorkHard() {
 		start();
 	}
@@ -45,15 +42,12 @@ class WorkHard extends Thread {
 				System.out.println(e);
 			}
 		}
-		
-		stop = true;
 	}
 }
 
 class PlayHard implements Runnable {
 	int counter;
-	boolean stop;
-	
+
 	@Override
 	public void run() {
 		while(counter <= 10) {
@@ -66,7 +60,5 @@ class PlayHard implements Runnable {
 				System.out.println(e);
 			}
 		}
-		
-		stop = true;
 	}
 }
