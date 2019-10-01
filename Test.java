@@ -11,7 +11,7 @@ public class Test {
 		
 		ExecutorService service = null;
 		try {
-			service = Executors.newSingleThreadExecutor();
+			service = Executors.newSingleThreadExecutor(); // new thread using ExecutorService
 			service.execute(() -> {for (int i = 0; i < 3; i++) 
 				System.out.println("What's going on?");}
 			);
@@ -23,7 +23,7 @@ public class Test {
 	} 
 }
 
-class WorkHard extends Thread {
+class WorkHard extends Thread { // new thread extending Thread Class
 	int counter;
 
 	WorkHard() {
@@ -45,7 +45,7 @@ class WorkHard extends Thread {
 	}
 }
 
-class PlayHard implements Runnable {
+class PlayHard implements Runnable { // new thread using Runnable object
 	int counter;
 
 	@Override
