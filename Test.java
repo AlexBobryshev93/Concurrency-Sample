@@ -1,7 +1,10 @@
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 public class Test {
-    public static void main(String[] args)  throws InterruptedException {
+    static AtomicInteger counter = new AtomicInteger(0);
+	
+	public static void main(String[] args)  throws InterruptedException {
 		System.out.println("Main thread has started");
 		
 		WorkHard wh = new WorkHard();
@@ -24,17 +27,14 @@ public class Test {
 }
 
 class WorkHard extends Thread { // new thread extending Thread Class
-	int counter;
-
 	WorkHard() {
 		start();
 	}
 	
 	@Override
 	public void run() {
-		while(counter <= 10) {
+		while(Test.counter.getAndIncrement() < 10) {
 			System.out.println("Work Hard...");
-			counter++;
 
 			try {
 				Thread.sleep(300);
@@ -46,13 +46,10 @@ class WorkHard extends Thread { // new thread extending Thread Class
 }
 
 class PlayHard implements Runnable { // new thread using Runnable object
-	int counter;
-
 	@Override
 	public void run() {
-		while(counter <= 10) {
+		while(Test.counter.getAndIncrement() < 10) {
 			System.out.println("Play Hard...");
-			counter++;
 			
 			try {
 				Thread.sleep(300);
