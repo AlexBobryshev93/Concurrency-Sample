@@ -15,7 +15,7 @@ public class Test {
 		ExecutorService service = null;
 		try {
 			service = Executors.newSingleThreadExecutor(); // new thread using ExecutorService
-			service.execute(() -> {for (int i = 0; i < 3; i++) 
+			service.execute(() -> {for (int i = 0; i < 3; i++) // this thread has the highest priority, others will continue only when it is terminated
 				System.out.println("What's going on?");}
 			);
 		} finally {
