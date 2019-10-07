@@ -14,15 +14,26 @@ public class Test {
 		
 		ExecutorService service = null;
 		try {
-			service = Executors.newSingleThreadExecutor(); // new thread using ExecutorService
-			service.execute(() -> {for (int i = 0; i < 3; i++) // this thread has the highest priority, others will continue only when it is terminated
-				System.out.println("What's going on?");}
-			);
+			int n = 3; // how many threads do we want here?
+			service = Executors.newFixedThreadPool(n); // new ThreadPool using ExecutorService
+			CyclicBarrier cb = new CyclicBarrier(n);
+			
+			for (int i = 0; i < n; i++) service.submit(() -> { // these threads have the highest priority, others will continue only when these are terminated
+				System.out.println("Here comes Thread#" + Thread.currentThread().getId());
+				
+				try {
+					cb.await();
+				} catch (InterruptedException | BrokenBarrierException e) {
+					System.out.println(e);
+				}
+			});
 		} finally {
 			if (service != null) service.shutdown();
 		}
 		
 		while (wh.isAlive() || pt.isAlive() || !service.isTerminated()) Thread.sleep(500);
+		
+		System.out.println("Main thread is terminated");
 	} 
 }
 
