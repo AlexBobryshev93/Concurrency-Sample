@@ -10,11 +10,14 @@ public class Test {
 		WorkHard wh = new WorkHard();
 		PlayHard ph = new PlayHard();
 		Thread pt = new Thread(ph);
+		
+		wh.setPriority(Thread.MAX_PRIORITY);
+		pt.setPriority(Thread.MIN_PRIORITY);
 		pt.start();
 		
 		ExecutorService service = null;
 		try {
-			int n = 3; // how many threads do we want here?
+			final int n = 3; // how many threads do we want here?
 			service = Executors.newFixedThreadPool(n); // new ThreadPool using ExecutorService
 			CyclicBarrier cb = new CyclicBarrier(n);
 			
