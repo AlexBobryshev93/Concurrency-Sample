@@ -13,6 +13,7 @@ public class Test {
 		
 		wh.setPriority(Thread.MAX_PRIORITY);
 		pt.setPriority(Thread.MIN_PRIORITY);
+		pt.setDaemon(true);
 		pt.start();
 		
 		ExecutorService service = null;
@@ -25,6 +26,7 @@ public class Test {
 				System.out.println("Here comes Thread#" + Thread.currentThread().getId());
 				
 				try {
+					Thread.sleep(500);
 					cb.await();
 				} catch (InterruptedException | BrokenBarrierException e) {
 					System.out.println(e);
@@ -34,21 +36,23 @@ public class Test {
 			if (service != null) service.shutdown();
 		}
 		
-		while (wh.isAlive() || pt.isAlive() || !service.isTerminated()) Thread.sleep(500);
+		while (!service.isTerminated()) Thread.sleep(500);
 		
-		System.out.println("Main thread is terminated");
+		System.out.println("Main thread is terminated. Count: " + counter);
 	} 
 }
 
 class WorkHard extends Thread { // new thread extending Thread Class
 	WorkHard() {
-		start();
+		setDaemon(true);
+		start(); // start() in the constructor is not recommended
 	}
 	
 	@Override
 	public void run() {
-		while(Test.counter.getAndIncrement() < 10) {
+		while(true) {
 			System.out.println("Work Hard...");
+			Test.counter.getAndIncrement();
 
 			try {
 				Thread.sleep(300);
@@ -62,8 +66,9 @@ class WorkHard extends Thread { // new thread extending Thread Class
 class PlayHard implements Runnable { // new thread using Runnable object
 	@Override
 	public void run() {
-		while(Test.counter.getAndIncrement() < 10) {
+		while(true) {
 			System.out.println("Play Hard...");
+			Test.counter.getAndIncrement();
 			
 			try {
 				Thread.sleep(300);
