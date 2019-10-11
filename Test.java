@@ -26,7 +26,7 @@ public class Test {
 				System.out.println("Here comes Thread#" + Thread.currentThread().getId());
 				
 				try {
-					Thread.sleep(500);
+					Thread.sleep(2000);
 					cb.await();
 				} catch (InterruptedException | BrokenBarrierException e) {
 					System.out.println(e);
@@ -55,7 +55,7 @@ class WorkHard extends Thread { // new thread extending Thread Class
 			Test.counter.getAndIncrement();
 
 			try {
-				Thread.sleep(300);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				System.out.println(e);
 			}
@@ -71,7 +71,7 @@ class PlayHard implements Runnable { // new thread using Runnable object
 			Test.counter.getAndIncrement();
 			
 			try {
-				Thread.sleep(300);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				System.out.println(e);
 			}
